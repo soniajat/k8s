@@ -1,6 +1,5 @@
-# 01 - Fundamentals and Your First Cluster
+# 01 - Fundamentals and My First Cluster
 
-Quick-reference notes for a DevOps engineer: why Kubernetes exists, how it is built, and how to get a local cluster running with `kind` and `kubectl`.
 
 ---
 
