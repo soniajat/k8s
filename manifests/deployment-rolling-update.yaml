@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deploy
+  labels:
+    app: web-deploy
+  annotations:
+    kubernetes.io/change-cause: "nginx 1.25 baseline"   # shows up in rollout history
+spec:
+  replicas: 3
+  revisionHistoryLimit: 5      # how many old ReplicaSets to keep for rollback
+  minReadySeconds: 5           # pod must stay ready this long before counting as available
+  strategy:
+    type: RollingUpdate        # alternative: Recreate (downtime, but no mixed versions)
+    rollingUpdate:
+      maxSurge: 1              # up to 1 extra pod during the update
+      maxUnavailable: 0        # never drop below desired count -> no capacity loss
+  selector:
+    matchLabels:
+      app: web-deploy
+  template:
+    metadata:
+      labels:
+        app: web-deploy
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25    # change this to trigger a rolling update
+          ports:
+            - containerPort: 80
+          readinessProbe:      # gates traffic and the rollout; a failing probe stalls the update
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 5

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-pod
+  labels:
+    app: web          # used by selectors
+    env: dev
+  annotations:
+    owner: "platform-team"   # informational only, not selectable
+spec:
+  containers:
+    - name: nginx
+      image: nginx
